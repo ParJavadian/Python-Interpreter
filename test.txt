@@ -1,5 +1,5 @@
 def function():
-  pass;;
+  i = 4;;
 
 for i in range(10):
   x = i+2;
