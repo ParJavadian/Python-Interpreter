@@ -1,0 +1,4 @@
+(define value_of_assignment (lambda (stmt env) (cases statement stmt
+                                                 (assign (var expr) (let ((result (value_of_expression exp env)))
+                                                                      (list (car result) (extend-env var (car result) env)))))))
+                                                                      
