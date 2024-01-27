@@ -1,0 +1,2 @@
+# PL-Project Scanner-Parser
+This is a repo containing the Scanner-Parser of a language like Python. Furthermore, you can test the Scanner-Parser by executing ```(evaluate "test.py")``` on the main file.
