@@ -5,16 +5,17 @@
 
 (define empty_env (lambda () (empty-environment)))
 
-;;; (define extend_env (lambda (var val env) (cases environment env
-;;;     (empty_environment () (extend_environment var val env))
-;;;     (extend_environment (saved_var saved_val saved_env)
-;;;         (if(equal? var saved_var)
-;;;             (eopl:error 'binding-error!
-;;;                 "\n\tcannot define identifier ~s which is already defined!" (var))
-;;;             (extend_environment saved_var saved_val (extend_env var val saved_env)))))))
-
 (define extend_env (lambda (var val env) (cases environment env
     (empty_environment () (extend_environment var val env))
+    (extend_environment (saved_var saved_val saved_env)
+        (if(equal? var saved_var)
+            (eopl:error 'binding-error!
+                "\n\tcannot define identifier ~s which is already defined!" (var))
+            (extend_environment saved_var saved_val (extend_env var val saved_env)))))))
+
+(define update_env (lambda (var val env) (cases environment env
+    (empty-environment () (eopl:error 'binding-error!
+        "\n\tidentifier ~s is used before declaration" (var)))
     (extend_environment (saved_var saved_val saved_env)
         (if (equal? var saved_var)
             (extend_environment var val saved_env)
