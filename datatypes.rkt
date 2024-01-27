@@ -42,5 +42,9 @@
   (expressions (expr expression?) (rest-exprs expression*?))
   )
 
+  (define-datatype empty-var empty-var?
+    (empty-var)
+  )
+
 (provide (all-defined-out))
 (#%provide (all-defined))

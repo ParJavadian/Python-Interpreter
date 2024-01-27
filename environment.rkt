@@ -27,4 +27,13 @@
     (extend_environment (saved_var val saved_env)
         (if (equal? var saved_var) val (apply_env var saved_env))))))
 
+(define var-exists (lambda(var env) (cases environment env
+    (empty-environment () #f)
+    (extend_environment (saved_var val saved_env)
+        (if (equal? var saved_var) 
+            #t 
+            (apply_env var saved_env)
+        ))
+)))  
+
 (provide (all-defined-out))
