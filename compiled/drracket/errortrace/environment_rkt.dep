@@ -1,0 +1,1 @@
+("8.10" tarm64osx ("f7290de1b7509f89523b54255019d9a69b720b8b" . "537adb68c1a2a877698055e56b44e590539b93cd") #"/Users/parmida/Daneshgah/Term_7/PL/Project/PR1/PL-Project/datatypes.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"eopl" #"eopl.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

@@ -42,9 +42,12 @@
   (expressions (expr expression?) (rest-exprs expression*?))
   )
 
-  (define-datatype empty-var empty-var?
-    (empty-var)
-  )
+(define-datatype environment environment?
+  (empty_environment)
+  (extend_environment (var string?) (val (lambda (x) #t)) (env environment?))
+)
+
+
 
 (provide (all-defined-out))
 (#%provide (all-defined))

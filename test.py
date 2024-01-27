@@ -1,6 +1,7 @@
 def function():
   pass;;
 
+
 for i in range(10):
   x = i+2;
   x=x+2;;
