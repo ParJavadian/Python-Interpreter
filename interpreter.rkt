@@ -43,6 +43,26 @@
          (display "\n")
          (print-all (cdr vals)))))
 
+(define (handle-loop i lst body scope-index)
+    (cond
+        ((empty? lst) null)
+        (else (begin
+            (extend-scope scope-index i (car lst))
+            (let ([body-val (value-of body scope-index)])
+             (cond
+                ((control-signal? body-val)
+                    (cases control-signal body-val
+                        (break-signal () null)
+                        (else (handle-loop i (cdr lst) body scope-index))
+                ))
+                (else (handle-loop i (cdr lst) body scope-index)))
+             )
+             )
+        )
+    )
+)
+
+
 (define (value-of exp scope-index)
     (cond
         ((statement? exp) (cases statement exp
@@ -67,6 +87,13 @@
                     (begin
                      (print-all vals)
                      (none))))
+            (break () (break-signal))
+            (continue () (continue-signal))
+            (for_stmt (i list_exp sts)
+                (let ([iterating-list (expression->vals list_exp scope-index)])
+                    (handle-loop i iterating-list sts scope-index)
+                )
+            )
             (else (none))
         ))
         ((expression? exp) (cases expression exp
