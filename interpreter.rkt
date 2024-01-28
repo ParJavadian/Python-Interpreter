@@ -90,7 +90,7 @@
             (break () (break-signal))
             (continue () (continue-signal))
             (for_stmt (i list_exp sts)
-                (let ([iterating-list (expression->vals list_exp scope-index)])
+                (let ([iterating-list (expressions->vals list_exp scope-index)])
                     (handle-loop i iterating-list sts scope-index)
                 )
             )
