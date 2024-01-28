@@ -1,3 +1,5 @@
 .idea
 /passes/compiled/
 /compiled
+*.dep
+*.zo
