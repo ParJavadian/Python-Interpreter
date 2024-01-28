@@ -23,7 +23,8 @@
         (get-env scope-index)
         (let ([return-val (value-of (car pb) scope-index)])
         (cases return-type return-val
-        (none (interpret-program-block (cdr pb) scope-index))))))
+        (none (interpret-program-block (cdr pb) scope-index))))
+        ))
 
 (define (expressions->vals expressions-in scope-index)
     (cases expression* expressions-in
@@ -62,10 +63,12 @@
     )
 )
 
-(define (handle-if condition if_sts else_sts scope-index)
-    (cond 
-        ((eq? condition #t) (interpret-program-block if_sts scope-index))
-        (else (interpret-program-block else_sts scope-index))
+(define handle-if 
+    (lambda (condition if_sts else_sts scope-index)
+        (cond 
+            ((eq? condition #t) (interpret-program-block if_sts scope-index))
+            (else (interpret-program-block else_sts scope-index))
+        )
     )
 )
 
@@ -115,11 +118,11 @@
                     (handle-loop i iterating-list sts new-scope)
                 )
             )
-            (if_stmt (cond_exp if_sts else_sts) (
+            (if_stmt (cond_exp if_sts else_sts)
                 (let ([condition (value-of cond_exp scope-index)])
                     (handle-if condition if_sts else_sts scope-index)
                 )
-            ))
+            )
             (else (none))
         ))
         ((expression? exp) (cases expression exp
