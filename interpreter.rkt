@@ -44,15 +44,15 @@
     (cond
         ((statement? exp) (cases statement exp
             (assign (var expr)
-            (let ([index (if (is-global? var scope-index)
-                            0
-                            scope-index)])
+                (let ([index (if (is-global? var scope-index)
+                                0
+                                scope-index)])
 
-                        (extend-scope index var (value-of expr scope-index))
-                        (none)
-            ))
+                            (extend-scope index var (value-of expr scope-index))
+                            (none)
+                ))
             (return (expr)  (let ([value (car (value-of expr scope-index))])
-                            (val value)))
+                                (val value)))
             (return_void () (none))
             (pass () (none))
             (print_stmt (expressions) 
@@ -61,9 +61,10 @@
                      (print-all vals)
                      (none))))
             (else (none))
-        )
-        ;;; (..?)
-    )
+        ))
+        ((expression? exp) (cases expression exp
+            (atomic_num_exp (num) num)
+            (else 0)))
         (else none)
     )
 )
