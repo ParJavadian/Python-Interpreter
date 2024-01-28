@@ -6,6 +6,7 @@
 
 (define-datatype return-type return-type?
   (none)
+  (val (value (lambda (x) #t)))
 )
 
 (define (interpret-program prog env)
@@ -50,9 +51,8 @@
                         (extend-scope index var (value-of expr scope-index))
                         (none)
             ))
-            ;;; (return (expr)  (let ([value (car (value-of expr env))])
-            ;;;                 (list value env))
-            ;;;             )
+            (return (expr)  (let ([value (car (value-of expr scope-index))])
+                            (val value)))
             (return_void () (none))
             (pass () (none))
             (print_stmt (expressions) 
