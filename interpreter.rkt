@@ -63,6 +63,8 @@
             (else (none))
         ))
         ((expression? exp) (cases expression exp
+            (ref (var) (apply-scope scope-index var))
+            (list_ref (ref index) (list-ref (value-of ref scope-index) (value-of index scope-index)))
             (atomic_num_exp (num) num)
             (atomic_bool_exp (bool) bool)
             (atomic_null_exp () (none))
