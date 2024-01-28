@@ -62,7 +62,7 @@
 
 (define (renew-scope) (set! scopes '()))
 
-(define (init-scope) (the-scope (empty-environment) -1 '()))
+(define (init-scope) (the-scope (empty_environment) -1 '()))
 
 (define (apply-scope scope-index var)
   (apply-scope-on-given-scopes scope-index scopes var)
@@ -75,9 +75,9 @@
      if (is-global-on-given-scopes? var scope-index -scopes) 
      (apply-scope-on-given-scopes 0 -scopes var)
      (
-      let ([res (apply-env var (scope->env my-scope))])
+      let ([res (apply_env var (scope->env my-scope))])
        (cond
-         [(not (equal? res (empty-environment))) res]
+         [(not (equal? res (empty_environment))) res]
          [(>= (scope->upper my-scope) 0) (apply-scope-on-given-scopes (scope->upper my-scope) -scopes var)]
          [else (eopl:error 'binding-error!
             "\n\tIdentifier ~s is used before declaration!" var)]
@@ -90,11 +90,13 @@
 (define (extend-scope scope-index var value)
     (let ([current-scope (get-scope scope-index)])
         (let ([current-env (scope->env current-scope)])
-            (let ([new-env (extend-env var (cond 
-                                                [(promise? value) value]
-                                                [(proc? value) value]
-                                                [else (a-promise value scope-index scopes)]
-                                                )
+            (let ([new-env (update_env var 
+            ;;; (cond 
+            ;;;                                     [(promise? value) value]
+            ;;;                                     [(proc? value) value]
+            ;;;                                      [else (a-promise value scope-index scopes)]
+            ;;;                                     )
+            value
                                                  current-env)])
                 (set-scope scope-index 
                     (the-scope new-env 
@@ -124,7 +126,7 @@
   )
 
 (define-datatype eval-func-param eval-func-param?
-  (eval_with_default (var string?) (val any?) (scope-index number?) (-scopes list?))
+  (eval_with_default (var string?) (val (lambda (x) #t)) (scope-index number?) (-scopes list?))
   )
 
 (define-datatype eval-func-param* eval-func-param*?
