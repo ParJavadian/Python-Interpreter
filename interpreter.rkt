@@ -45,7 +45,7 @@
 
 (define (handle-loop i lst body scope-index)
     (cond
-        ((empty? lst) null)
+        ((empty? lst) (none))
         (else (begin
             (extend-scope scope-index i (car lst))
             (let ([body-val (value-of body scope-index)])
@@ -90,7 +90,7 @@
             (break () (break-signal))
             (continue () (continue-signal))
             (for_stmt (i list_exp sts)
-                (let ([iterating-list (expressions->vals list_exp scope-index)])
+                (let ([iterating-list (value-of list_exp scope-index)])
                     (handle-loop i iterating-list sts scope-index)
                 )
             )
