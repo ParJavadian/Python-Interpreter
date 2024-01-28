@@ -36,7 +36,10 @@
     (if (null? vals)
         vals
         (begin
-         (display (car vals))
+         (cond 
+            [(eq? #t (car vals)) (display "True")]
+            [(eq? #f (car vals)) (display "False")]
+            [else (display(car vals))])
          (display "\n")
          (print-all (cdr vals)))))
 
@@ -49,8 +52,12 @@
                                 scope-index)])
 
                             (extend-scope index var (value-of expr scope-index))
-                            (none)
-                ))
+                            (none)))
+            ;;; TODO : maybe debug needed
+            (global (var) 
+                (begin 
+                    (extend-scope-globals scope-index var)
+                    (none)))
             (return (expr)  (let ([value (car (value-of expr scope-index))])
                                 (val value)))
             (return_void () (none))

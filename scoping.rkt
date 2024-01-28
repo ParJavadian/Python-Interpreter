@@ -117,6 +117,16 @@
   (member var (scope->globals (get-scope-on-given-scopes scope-index -scopes)))
 )
 
+;;; (define (check-global var scope-index)
+;;;   (if (scope-index-contains-itself var scope-index)
+;;;       (display "error in global")
+;;;       '()))
+
+;;; (define (scope-index-contains-itself var scope-index)
+;;;   (not (equal?
+;;;         (apply_env (scope->env (get-scope scope-index)) var)
+;;;         (display "env not found"))))
+
 (define-datatype proc proc?
   (new-proc
    (params eval-func-param*?)
