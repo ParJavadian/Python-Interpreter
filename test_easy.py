@@ -6,7 +6,6 @@ print(k);
 print(k[2]);
 j = True;
 print(j);
-global g;
-g = True;
-print(g);
+print(5+7);
+print(not False);
 

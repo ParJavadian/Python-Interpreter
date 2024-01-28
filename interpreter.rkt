@@ -70,6 +70,8 @@
             (else (none))
         ))
         ((expression? exp) (cases expression exp
+            (binary_op (op left right) (op (value-of left scope-index) (value-of right scope-index)))
+            (unary_op (op operand) (op (value-of operand scope-index)))
             (ref (var) (apply-scope scope-index var))
             (list_ref (ref index) (list-ref (value-of ref scope-index) (value-of index scope-index)))
             (atomic_num_exp (num) num)
