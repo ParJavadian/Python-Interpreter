@@ -24,6 +24,21 @@
         (cases return-type return-val
         (none (interpret-program-block (cdr pb) scope-index))))))
 
+(define (expressions->vals expressions-in scope-index)
+    (cases expression* expressions-in
+        (empty-expr () null)
+        (expressions (expr rest-exprs)
+            (append (expressions->vals rest-exprs scope-index) (list (value-of expr scope-index))))
+        ))
+
+(define (print-all vals)
+    (if (null? vals)
+        vals
+        (begin
+         (display (car vals))
+         (display "\n")
+         (print-all (cdr vals)))))
+
 (define (value-of exp scope-index)
     (cond
         ((statement? exp) (cases statement exp
@@ -35,13 +50,16 @@
                         (extend-scope index var (value-of expr scope-index))
                         (none)
             ))
-            (return (expr)  (let ([value (car (value-of expr env))])
-                            (list value env))
-                        )
-            (return_void null)
-            (pass null)
-             )
-
+            ;;; (return (expr)  (let ([value (car (value-of expr env))])
+            ;;;                 (list value env))
+            ;;;             )
+            (return_void () (none))
+            (pass () (none))
+            (print_stmt (expressions) 
+                (let ([vals (expressions->vals expressions scope-index)])
+                    (begin
+                     (print-all vals)
+                     (none))))
             (else (none))
         )
         ;;; (..?)

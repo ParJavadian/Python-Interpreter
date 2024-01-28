@@ -40,7 +40,7 @@
 (define-datatype expression* expression*?
   (empty-expr)
   (expressions (expr expression?) (rest-exprs expression*?))
-  )
+)
 
 (define-datatype environment environment?
   (empty_environment)
