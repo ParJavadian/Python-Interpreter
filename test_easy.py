@@ -8,4 +8,7 @@ j = True;
 print(j);
 print(5+7);
 print(not False);
+def f(a=7,b=8):
+def g(c=9):
+i = 10;;;
 

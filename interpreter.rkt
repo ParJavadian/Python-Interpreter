@@ -62,6 +62,15 @@
     )
 )
 
+(define (params-list params scope-index)
+    (cases func_param* params
+        (empty-param () (empty-eval-func-param))
+        (func_params (param rest-params)
+            (eval-func-params 
+                (cases func_param param
+                    (with_default (var expr)
+                        (eval_with_default var (value-of expr scope-index))))
+                (params-list rest-params scope-index)))))
 
 (define (value-of exp scope-index)
     (cond
@@ -82,6 +91,11 @@
                                 (val value)))
             (return_void () (none))
             (pass () (none))
+            (func (name params statements)
+                (begin
+                    (extend-scope scope-index name
+                        (new-proc (params-list params scope-index) statements scope-index))
+                    (none)))
             (print_stmt (expressions) 
                 (let ([vals (expressions->vals expressions scope-index)])
                     (begin

@@ -136,7 +136,7 @@
   )
 
 (define-datatype eval-func-param eval-func-param?
-  (eval_with_default (var string?) (val (lambda (x) #t)) (scope-index number?) (-scopes list?))
+  (eval_with_default (var string?) (val (lambda (x) #t)))
   )
 
 (define-datatype eval-func-param* eval-func-param*?
