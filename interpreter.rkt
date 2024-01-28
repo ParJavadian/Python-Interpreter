@@ -64,6 +64,11 @@
         ))
         ((expression? exp) (cases expression exp
             (atomic_num_exp (num) num)
+            (atomic_bool_exp (bool) bool)
+            (atomic_null_exp () (none))
+            (atomic_list_exp (lst) (
+                expressions->vals lst scope-index
+            ))
             (else 0)))
         (else none)
     )
