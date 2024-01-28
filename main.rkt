@@ -2,7 +2,7 @@
 
 (require "passes/parser.rkt")
 (require "passes/lexer.rkt")
-(require "interpreter_parmida.rkt")
+(require "interpreter.rkt")
 (require "environment.rkt")
 (require "datatypes.rkt")
 
@@ -12,7 +12,7 @@
   )
 
 (define (evaluate file-name)
-  (parse-scan (string-join (file->lines file-name)))
+  (interpret-program (parse-scan (string-join (file->lines file-name))) (empty_env))
   )
 
 (provide (all-defined-out))
