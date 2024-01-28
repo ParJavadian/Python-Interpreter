@@ -18,6 +18,14 @@
                 (update_env var value env)
                )    
             ))
+
+            (return (expr)  (let ([value (car (value-of expr env))])
+                (list value env))
+            )
+            (return_void null)
+            (pass null)
+            )
+
             (list 1 env)
         )
         ;;; (..?)
