@@ -64,6 +64,15 @@
     )
 )
 
+(define handle-if
+    (lambda (condition if_sts else_sts scope-index)
+        (cond
+            ((eq? condition #t) (interpret-program-block if_sts scope-index))
+            (else (interpret-program-block else_sts scope-index))
+        )
+    )
+)
+
 (define (params-list params scope-index)
     (cases func_param* params
         (empty-param () (empty-eval-func-param))
@@ -119,6 +128,11 @@
                                  (display (get-scope scope-index))
                                  (display "\nend\n")
                     )
+                )
+            )
+            (if_stmt (cond_exp if_sts else_sts)
+                (let ([condition (value-of cond_exp scope-index)])
+                    (handle-if condition if_sts else_sts scope-index)
                 )
             )
             (else (none))
