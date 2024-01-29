@@ -64,10 +64,10 @@
     )
 )
 
-(define handle-if
+(define handle-if 
     (lambda (condition if_sts else_sts scope-index)
-        (cond
-            ((eq? condition #t) (interpret-program-block if_sts scope-index))
+        (cond 
+            ((and (eq? condition #t) (not(eq? condition 0))) (interpret-program-block if_sts scope-index))
             (else (interpret-program-block else_sts scope-index))
         )
     )
@@ -120,9 +120,10 @@
                 )
             )
             (if_stmt (cond_exp if_sts else_sts)
-                (let ([condition (value-of cond_exp scope-index)])
-                    (handle-if condition if_sts else_sts scope-index)
-                )
+                (begin
+                    (let ([condition (value-of cond_exp scope-index)])
+                        (handle-if condition if_sts else_sts scope-index))
+                    (none))
             )
             (else (none))
         ))
