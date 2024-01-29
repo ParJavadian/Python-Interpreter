@@ -1,14 +1,17 @@
-i=2;
-j=7;
-print(7,8);
-k = [3,4,6];
-print(k);
-print(k[2]);
-j = True;
-print(j);
-print(5+7);
-print(not False);
 def f(a=7,b=8):
-def g(c=9):
-i = 10;;;
+    return a;;
+print(f(7+6,0));
+a=19;
+if a > 19:
+    a = 1;
+    print(20);
+else:
+    a = 2;
+    print(a * 5);;
+print(a);
+i = 9;
+for i in [1,2,3,4]:
+    print(i);;
+print(i);
+
 
