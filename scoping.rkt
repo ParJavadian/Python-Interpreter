@@ -8,8 +8,6 @@
 
 (define scope-index? (lambda (n) (< n (length scopes))))
 
-
-
 (define-datatype scope scope?
   (the-scope (env environment?) (upper-scope-index scope-index?) (globals list?))
   )
@@ -28,7 +26,6 @@
   (cases scope s
     (the-scope (env upper-scope-index globals) globals)
 ))
-
 
 (define (extend-scope-globals scope-index var)
     (let ([-scope (get-scope scope-index)])
@@ -92,14 +89,7 @@
 (define (extend-scope scope-index var value)
     (let ([current-scope (get-scope scope-index)])
         (let ([current-env (scope->env current-scope)])
-            (let ([new-env (update_env var 
-            ;;; (cond 
-            ;;;                                     [(promise? value) value]
-            ;;;                                     [(proc? value) value]
-            ;;;                                      [else (a-promise value scope-index scopes)]
-            ;;;                                     )
-            value
-                                                 current-env)])
+            (let ([new-env (update_env var value current-env)])
             (begin
                 (set-scope scope-index 
                     (the-scope new-env 
@@ -137,16 +127,6 @@
   (member var (scope->globals (get-scope-on-given-scopes scope-index -scopes)))
 )
 
-;;; (define (check-global var scope-index)
-;;;   (if (scope-index-contains-itself var scope-index)
-;;;       (display "error in global")
-;;;       '()))
-
-;;; (define (scope-index-contains-itself var scope-index)
-;;;   (not (equal?
-;;;         (apply_env (scope->env (get-scope scope-index)) var)
-;;;         (display "env not found"))))
-
 (define-datatype proc proc?
   (new-proc
    (params eval-func-param*?)
@@ -163,6 +143,5 @@
   (empty-eval-func-param)
   (eval-func-params (eval-param eval-func-param?) (rest-evals eval-func-param*?))
   )
-
 
 (provide (all-defined-out))

@@ -16,11 +16,3 @@
   )
 
 (provide (all-defined-out))
-
-;(evaluate "test_easy.py")
-;(parse-scan (string-join (file->lines "test_easy.py")))
-;(value-of (evaluate "test.py") (empty_env))
-;(value-of (assign "i" (atomic_num_exp 2)) (empty_env))
-; global g;
-; g = True;
-; print(g);
