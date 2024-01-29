@@ -121,7 +121,7 @@
             (eval-func-params 
                 (cases func_param param
                     (with_default (var expr)
-                        (eval_with_default var (value-of expr scope-index))))
+                        (eval_with_default var (a-thunkk expr scopes scope-index))))
                 (params-list rest-params scope-index)))))
 
 (define (extend-scope-with-params func-params in-params scope-index calling-scope-index)
@@ -144,7 +144,7 @@
                     (cases eval-func-param eval-param
                         (eval_with_default (var val)
                             (begin
-                                (extend-scope scope-index var (value-of expr calling-scope-index))
+                                (extend-scope scope-index var (a-thunkk expr scopes scope-index))
                                 (extend-scope-with-params rest-evals rest-exprs scope-index calling-scope-index)
                                 (none)
                             ))))))))
@@ -160,7 +160,9 @@
                     ;;; [applied-params (get-applied-params params in-params)]
                       [new-scope (add-scope (child-scope parent-scope))])
                         (begin
-                            (extend-scope-with-params params in-params new-scope scope-index)
+                            (if (thunkk? in-params)
+                                (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
+                                (extend-scope-with-params params in-params new-scope scope-index))
                             (interpret-program-block statements new-scope)))))))
 
 (define (value-of exp scope-index)
