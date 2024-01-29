@@ -27,6 +27,7 @@
 ;        (get-env scope-index)
         ;;; ((=  1 (length pb)) (value-of (car pb) scope-index))
         (else (let ([return-val (value-of (car pb) scope-index)])
+            (if (return-type? return-val)
             (cases return-type return-val
                 (none () (interpret-program-block (cdr pb) scope-index))
                 (val (value) value)
@@ -34,7 +35,9 @@
                 ;;; (display "\nhere\n") 
                 (break-signal)))
                 (continue-signal () (continue-signal))
-        )))
+            )
+            return-val)
+        ))
     )
 )
 
