@@ -98,14 +98,32 @@
             ;;;                                     )
             value
                                                  current-env)])
+            (begin
                 (set-scope scope-index 
                     (the-scope new-env 
                         (scope->upper current-scope)
                         (scope->globals current-scope)
                     )
                 )
+                (if (and (>= (scope->upper current-scope) 0) (is-defined? var (scope->upper current-scope)))
+                    (extend-scope (scope->upper current-scope) var value)
+                    null
+                )
+                )
             )
         )
+    )
+)
+
+(define (child-scope parent-index)
+    (let ([parent (get-scope parent-index)])
+     (the-scope (scope->env parent) parent-index (scope->globals parent))
+     )
+)
+
+(define (is-defined? var scope-index)
+    (let ([my-scope (get-scope scope-index)])
+         (exists-var? var (scope->env my-scope))
     )
 )
 
