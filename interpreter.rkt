@@ -91,6 +91,45 @@
                         (eval_with_default var (value-of expr scope-index))))
                 (params-list rest-params scope-index)))))
 
+(define (extend-scope-with-params func-params in-params scope-index calling-scope-index)
+    (cases expression* in-params
+        (empty-expr ()
+            (cases eval-func-param* func-params
+                (empty-eval-func-param () (none))
+                (eval-func-params (eval-param rest-evals)
+                    (cases eval-func-param eval-param
+                        (eval_with_default (var val)
+                            (begin
+                                (extend-scope scope-index var val)
+                                (extend-scope-with-params rest-evals in-params scope-index calling-scope-index)
+                                (none)
+                            ))))))
+        (expressions (expr rest-exprs)
+            (cases eval-func-param* func-params
+                (empty-eval-func-param () (none))
+                (eval-func-params (eval-param rest-evals)
+                    (cases eval-func-param eval-param
+                        (eval_with_default (var val)
+                            (begin
+                                (extend-scope scope-index var (value-of expr calling-scope-index))
+                                (extend-scope-with-params rest-evals rest-exprs scope-index calling-scope-index)
+                                (none)
+                            ))))))))
+
+(define (handle-func-call func-name in-params scope-index)
+    (let  ([func (value-of func-name scope-index)]
+            ;;; [new-scope (add-scope (child-scope scope-index))]
+            ;;; [params-vals (expressions->vals in-params scope-index)]
+            )
+        (cases proc func
+            (new-proc (params statements parent-scope)
+                (let (
+                    ;;; [applied-params (get-applied-params params in-params)]
+                      [new-scope (add-scope (child-scope parent-scope))])
+                        (begin
+                            (extend-scope-with-params params in-params new-scope scope-index)
+                            (interpret-program-block statements new-scope)))))))
+
 (define (value-of exp scope-index)
     (cond
         ((statement? exp) (cases statement exp
@@ -106,7 +145,7 @@
                 (begin 
                     (extend-scope-globals scope-index var)
                     (none)))
-            (return (expr)  (let ([value (car (value-of expr scope-index))])
+            (return (expr)  (let ([value (value-of expr scope-index)])
                                 (val value)))
             (return_void () (none))
             (pass () (none))
@@ -138,6 +177,8 @@
         ((expression? exp) (cases expression exp
             (binary_op (op left right) (op (value-of left scope-index) (value-of right scope-index)))
             (unary_op (op operand) (op (value-of operand scope-index)))
+            (function_call (func params)
+                (handle-func-call func params scope-index))
             (ref (var) (apply-scope scope-index var))
             (list_ref (ref index) (list-ref (value-of ref scope-index) (value-of index scope-index)))
             (atomic_num_exp (num) num)
