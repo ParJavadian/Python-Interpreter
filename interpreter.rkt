@@ -168,7 +168,7 @@
                                 0
                                 scope-index)])
 
-                            (extend-scope index var (value-of expr scope-index))
+                            (extend-scope index var (a-thunkk expr scopes scope-index))
                             (none)))
             ;;; TODO : maybe debug needed
             (global (var) 
@@ -209,7 +209,9 @@
             (unary_op (op operand) (op (value-of operand scope-index)))
             (function_call (func params)
                 (handle-func-call func params scope-index))
-            (ref (var) (apply-scope scope-index var))
+            (ref (var) (let ([saved-val (apply-scope scope-index var)])
+                (if (thunkk? saved-val)  (value-of-thunkk saved-val) saved-val)
+            ))
             (list_ref (ref index) (list-ref (value-of ref scope-index) (value-of index scope-index)))
             (atomic_num_exp (num) num)
             (atomic_bool_exp (bool) bool)

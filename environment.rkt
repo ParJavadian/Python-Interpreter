@@ -22,7 +22,7 @@
 
 (define apply_env (lambda (var env) (cases environment env
     (empty_environment () (eopl:error 'binding-error!
-        "\n\tidentifier ~s is used before declaration" (var)))
+        "\n\tidentifier ~s is used before declaration" var))
     (extend_environment (saved_var val saved_env)
         (if (equal? var saved_var) val (apply_env var saved_env))))))
 
