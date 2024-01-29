@@ -22,8 +22,10 @@
     (if (null? pb)
         (get-env scope-index)
         (let ([return-val (value-of (car pb) scope-index)])
-        (cases return-type return-val
-        (none (interpret-program-block (cdr pb) scope-index))))))
+;        (cases return-type return-val
+;        (none
+        (interpret-program-block (cdr pb) scope-index))))
+;        ))
 
 (define (expressions->vals expressions-in scope-index)
     (cases expression* expressions-in
@@ -48,7 +50,7 @@
         ((empty? lst) (none))
         (else (begin
             (extend-scope scope-index i (car lst))
-            (let ([body-val (value-of body scope-index)])
+            (let ([body-val (interpret-program-block body scope-index)])
              (cond
                 ((control-signal? body-val)
                     (cases control-signal body-val
@@ -105,7 +107,18 @@
             (continue () (continue-signal))
             (for_stmt (i list_exp sts)
                 (let ([iterating-list (value-of list_exp scope-index)] [new-scope (add-scope (get-scope scope-index))])
+                (begin (display iterating-list)
+                (display "\n new scope:\n")
+                (display (get-scope new-scope))
+                (display "\nend\n")
                     (handle-loop i iterating-list sts new-scope)
+                    (display "\n new scope after loop:\n")
+                                    (display (get-scope new-scope))
+                                    (display "\nend\n")
+                 (display "\n my scope:\n")
+                                 (display (get-scope scope-index))
+                                 (display "\nend\n")
+                    )
                 )
             )
             (else (none))
