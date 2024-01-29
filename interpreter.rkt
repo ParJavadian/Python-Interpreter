@@ -22,15 +22,17 @@
 
 (define (interpret-program-block pb scope-index)
     (cond
-        ((null? pb) none)
+        ((null? pb) (none))
 ;        (get-env scope-index)
-        ((=  1 (length pb)) (value-of (car pb) scope-index))
+        ;;; ((=  1 (length pb)) (value-of (car pb) scope-index))
         (else (let ([return-val (value-of (car pb) scope-index)])
             (cases return-type return-val
-            (none () (interpret-program-block (cdr pb) scope-index))
-            (val (value) (interpret-program-block (cdr pb) scope-index))
-            (break-signal () (begin (display "\nhere\n") (break-signal)))
-            (continue-signal () (continue-signal))
+                (none () (interpret-program-block (cdr pb) scope-index))
+                (val (value) value)
+                (break-signal () (begin 
+                ;;; (display "\nhere\n") 
+                (break-signal)))
+                (continue-signal () (continue-signal))
         )))
     )
 )
