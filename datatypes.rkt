@@ -47,10 +47,6 @@
   (extend_environment (var string?) (val (lambda (x) #t)) (env environment?))
 )
 
-(define-datatype control-signal control-signal?
-    (break-signal)
-    (continue-signal)
-)
 
 (provide (all-defined-out))
 (#%provide (all-defined))

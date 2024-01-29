@@ -7,6 +7,8 @@
 (define-datatype return-type return-type?
   (none)
   (val (value (lambda (x) #t)))
+  (break-signal)
+  (continue-signal)
 )
 
 (define (interpret-program prog env)
@@ -19,13 +21,19 @@
 (scope->env (get-scope scope-index)))
 
 (define (interpret-program-block pb scope-index)
-    (if (null? pb)
-        (get-env scope-index)
-        (let ([return-val (value-of (car pb) scope-index)])
-;        (cases return-type return-val
-;        (none
-        (interpret-program-block (cdr pb) scope-index))))
-;        ))
+    (cond
+        ((null? pb) none)
+;        (get-env scope-index)
+        ((=  1 (length pb)) (value-of (car pb) scope-index))
+        (else (let ([return-val (value-of (car pb) scope-index)])
+            (cases return-type return-val
+            (none () (interpret-program-block (cdr pb) scope-index))
+            (val (value) (interpret-program-block (cdr pb) scope-index))
+            (break-signal () (begin (display "\nhere\n") (break-signal)))
+            (continue-signal () (continue-signal))
+        )))
+    )
+)
 
 (define (expressions->vals expressions-in scope-index)
     (cases expression* expressions-in
@@ -52,13 +60,13 @@
             (extend-scope scope-index i (car lst))
             (let ([body-val (interpret-program-block body scope-index)])
              (cond
-                ((control-signal? body-val)
-                    (cases control-signal body-val
-                        (break-signal () null)
+                ((return-type? body-val)
+                    (cases return-type body-val
+                        (break-signal () (none))
                         (else (handle-loop i (cdr lst) body scope-index))
                 ))
-                (else (handle-loop i (cdr lst) body scope-index)))
-             )
+                (else (handle-loop i (cdr lst) body scope-index))))
+;             )
              )
         )
     )
@@ -120,10 +128,10 @@
                 )
             )
             (if_stmt (cond_exp if_sts else_sts)
-                (begin
+;                (begin
                     (let ([condition (value-of cond_exp scope-index)])
                         (handle-if condition if_sts else_sts scope-index))
-                    (none))
+;                    (none))
             )
             (else (none))
         ))
