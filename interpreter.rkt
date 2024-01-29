@@ -158,9 +158,13 @@
             (new-proc (params statements parent-scope)
                 (let ([new-scope (add-scope (child-scope parent-scope))])
                         (begin
-                            (if (thunkk? in-params)
-                                (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
-                                (extend-scope-with-params params in-params new-scope scope-index))
+                            (if (and (thunkk? in-params) (thunkk? params))
+                                (extend-scope-with-params (value-of-thunkk params) (value-of-thunkk in-params) new-scope scope-index)
+                                (if (thunkk? in-params)
+                                    (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
+                                    (if (thunkk? params)
+                                        (extend-scope-with-params (value-of-thunkk params) in-params new-scope scope-index)
+                                        (extend-scope-with-params params in-params new-scope scope-index))))
                             (interpret-program-block statements new-scope))))))
 )
 
