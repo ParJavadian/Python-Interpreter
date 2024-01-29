@@ -67,7 +67,7 @@
 (define handle-if 
     (lambda (condition if_sts else_sts scope-index)
         (cond 
-            ((eq? condition #t) (interpret-program-block if_sts scope-index))
+            ((and (eq? condition #t) (not(eq? condition 0))) (interpret-program-block if_sts scope-index))
             (else (interpret-program-block else_sts scope-index))
         )
     )
