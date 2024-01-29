@@ -47,6 +47,10 @@
   (extend_environment (var string?) (val (lambda (x) #t)) (env environment?))
 )
 
+(define-datatype thunkk thunkk?
+    (a-thunkk (expr expression?) (scopes-state list?) (scope-index number?))
+)
+
 
 (provide (all-defined-out))
 (#%provide (all-defined))

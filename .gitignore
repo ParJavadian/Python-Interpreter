@@ -16,3 +16,4 @@ passes/compiled/drracket/errortrace/lexer_rkt.dep
 passes/compiled/drracket/errortrace/lexer_rkt.zo
 passes/compiled/drracket/errortrace/parser_rkt.dep
 passes/compiled/drracket/errortrace/parser_rkt.zo
+/compiled/

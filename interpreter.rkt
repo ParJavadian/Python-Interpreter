@@ -2,6 +2,7 @@
 (require "datatypes.rkt")
 (require "environment.rkt")
 (require "scoping.rkt")
+(require "thunkk.rkt")
 (require (lib "eopl.ss" "eopl"))
 
 (define-datatype return-type return-type?
@@ -44,6 +45,26 @@
             (append (expressions->vals rest-exprs scope-index) (list (value-of expr scope-index))))
         ))
 
+
+(define (list-copy list)
+  (if (null? list) '() (cons (car list) (list-copy (cdr list)))))
+
+(define (value-of-thunkk th)
+    (cases thunkk th
+        (a-thunkk (expr scopes-state scope-index)
+            (let ([temp-scopes (list-copy scopes)])
+                  (begin
+                    (set-scopes scopes-state)
+                    (let ([value (value-of expr scope-index)])
+                        (set-scopes temp-scopes)
+                        value
+                  )
+                )
+            )
+        )
+    )
+)
+
 (define (print-all vals)
     (if (null? vals)
         vals
@@ -80,6 +101,13 @@
             ((and (eq? condition #t) (not(eq? condition 0))) (interpret-program-block if_sts scope-index))
             (else (interpret-program-block else_sts scope-index))
         )
+    )
+)
+
+(define (handle-binary-op op left-val right-th)
+    (if (equal? `* (object-name op))
+     (if (zero? left-val) 0 (* left-val (value-of-thunkk right-th)))
+     (op left-val (value-of-thunkk right-th))
     )
 )
 
@@ -177,7 +205,7 @@
             (else (none))
         ))
         ((expression? exp) (cases expression exp
-            (binary_op (op left right) (op (value-of left scope-index) (value-of right scope-index)))
+            (binary_op (op left right) (handle-binary-op op (value-of left scope-index) (a-thunkk right scopes scope-index)))
             (unary_op (op operand) (op (value-of operand scope-index)))
             (function_call (func params)
                 (handle-func-call func params scope-index))

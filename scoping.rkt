@@ -62,6 +62,8 @@
 
 (define (renew-scope) (set! scopes '()))
 
+(define (set-scopes -scopes) (set! scopes -scopes))
+
 (define (init-scope) (the-scope (empty_environment) -1 '()))
 
 (define (apply-scope scope-index var)
