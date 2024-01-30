@@ -13,26 +13,25 @@
 )
 
 (define (interpret-program prog env)
-        (begin
-            (renew-scope)
-            (interpret-program-block prog (add-scope (init-scope)))
-        ))
+    (begin
+        (renew-scope)
+        (interpret-program-block prog (add-scope (init-scope)))
+    )
+)
 
 (define (get-env scope-index)
-(scope->env (get-scope scope-index)))
+    (scope->env (get-scope scope-index))
+)
 
 (define (interpret-program-block pb scope-index)
     (cond
         ((null? pb) (none))
-;        (get-env scope-index)
-        ;;; ((=  1 (length pb)) (value-of (car pb) scope-index))
         (else (let ([return-val (value-of (car pb) scope-index)])
             (if (return-type? return-val)
             (cases return-type return-val
                 (none () (interpret-program-block (cdr pb) scope-index))
                 (val (value) value)
-                (break-signal () (begin 
-                ;;; (display "\nhere\n") 
+                (break-signal () (begin
                 (break-signal)))
                 (continue-signal () (continue-signal))
             )
@@ -53,7 +52,8 @@
 
 
 (define (list-copy list)
-  (if (null? list) '() (cons (car list) (list-copy (cdr list)))))
+  (if (null? list) '() (cons (car list) (list-copy (cdr list))))
+)
 
 (define (value-of-thunkk th)
     (cases thunkk th
@@ -80,7 +80,9 @@
             [(eq? #f (car vals)) (display "False")]
             [else (display(car vals))])
          (display "\n")
-         (print-all (cdr vals)))))
+         (print-all (cdr vals)))
+    )
+)
 
 (define (handle-loop i lst body scope-index)
     (cond
@@ -95,7 +97,6 @@
                         (else (handle-loop i (cdr lst) body scope-index))
                 ))
                 (else (handle-loop i (cdr lst) body scope-index))))
-;             )
              )
         )
     )
@@ -125,7 +126,9 @@
                 (cases func_param param
                     (with_default (var expr)
                         (eval_with_default var (a-thunkk expr scopes scope-index))))
-                (params-list rest-params scope-index)))))
+                (params-list rest-params scope-index)))
+    )
+)
 
 (define (extend-scope-with-params func-params in-params scope-index calling-scope-index)
     (cases expression* in-params
@@ -150,23 +153,25 @@
                                 (extend-scope scope-index var (a-thunkk expr scopes scope-index))
                                 (extend-scope-with-params rest-evals rest-exprs scope-index calling-scope-index)
                                 (none)
-                            ))))))))
+                            ))))))
+    )
+)
 
 (define (handle-func-call func-name in-params scope-index)
-    (let  ([func (value-of func-name scope-index)]
-            ;;; [new-scope (add-scope (child-scope scope-index))]
-            ;;; [params-vals (expressions->vals in-params scope-index)]
-            )
+    (let  ([func (value-of func-name scope-index)])
         (cases proc func
             (new-proc (params statements parent-scope)
-                (let (
-                    ;;; [applied-params (get-applied-params params in-params)]
-                      [new-scope (add-scope (child-scope parent-scope))])
+                (let ([new-scope (add-scope (child-scope parent-scope))])
                         (begin
-                            (if (thunkk? in-params)
-                                (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
-                                (extend-scope-with-params params in-params new-scope scope-index))
-                            (interpret-program-block statements new-scope)))))))
+                            (if (and (thunkk? in-params) (thunkk? params))
+                                (extend-scope-with-params (value-of-thunkk params) (value-of-thunkk in-params) new-scope scope-index)
+                                (if (thunkk? in-params)
+                                    (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
+                                    (if (thunkk? params)
+                                        (extend-scope-with-params (value-of-thunkk params) in-params new-scope scope-index)
+                                        (extend-scope-with-params params in-params new-scope scope-index))))
+                            (interpret-program-block statements new-scope))))))
+)
 
 (define (value-of exp scope-index)
     (cond
@@ -178,7 +183,6 @@
 
                             (extend-scope index var (a-thunkk expr scopes scope-index))
                             (none)))
-            ;;; TODO : maybe debug needed
             (global (var) 
                 (begin 
                     (extend-scope-globals scope-index var)
@@ -205,10 +209,8 @@
                 )
             )
             (if_stmt (cond_exp if_sts else_sts)
-;                (begin
                     (let ([condition (value-of cond_exp scope-index)])
                         (handle-if condition if_sts else_sts scope-index))
-;                    (none))
             )
             (else (none))
         ))

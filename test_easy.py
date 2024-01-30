@@ -13,5 +13,3 @@ i = 9;
 for i in [1,2,3,4]:
     print(i);;
 print(i);
-
-
