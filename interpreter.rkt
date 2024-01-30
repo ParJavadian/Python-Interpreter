@@ -45,7 +45,10 @@
     (cases expression* expressions-in
         (empty-expr () null)
         (expressions (expr rest-exprs)
-            (append (expressions->vals rest-exprs scope-index) (list (value-of expr scope-index))))
+            (append (expressions->vals rest-exprs scope-index) (list
+            (let ([val (value-of expr scope-index)]) (if (thunkk? val) (value-of-thunkk val) val))
+            )
+            ))
         ))
 
 

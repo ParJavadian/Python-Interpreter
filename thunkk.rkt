@@ -26,3 +26,6 @@
         (a-thunkk (expr scopes-state scope-index) expr)
     )
 )
+
+
+(provide (all-defined-out))

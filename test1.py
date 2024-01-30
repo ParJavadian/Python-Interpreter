@@ -1,7 +1,12 @@
-def tst(n=1):
-   if True:
-      return 0;
-   else:
-      return 1;;;
+x = 10000;
+d = 333333;
+def global_variable():
+    global x;
+    global d;
+    x = 10;
+    d = 150;
+    return 0;
+    print(43);;
 
-print(tst(0));
+print(global_variable());
+print(x, d);
