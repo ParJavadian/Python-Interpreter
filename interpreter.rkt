@@ -73,13 +73,13 @@
 
 (define (print-all vals)
     (if (null? vals)
-        vals
+        (display "\n")
         (begin
          (cond 
             [(eq? #t (car vals)) (display "True")]
             [(eq? #f (car vals)) (display "False")]
             [else (display(car vals))])
-         (display "\n")
+         (display " ")
          (print-all (cdr vals)))
     )
 )

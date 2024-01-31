@@ -10,3 +10,5 @@ def global_variable():
 
 print(global_variable());
 print(x, d);
+
+print(1,2,3);
