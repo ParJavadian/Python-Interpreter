@@ -1,14 +1,12 @@
-x = 10000;
-d = 333333;
-def global_variable():
-    global x;
-    global d;
-    x = 10;
-    d = 150;
-    return 0;
-    print(43);;
+def fn ():
+    if (True):
+        print(True);
+        return 1;
+    else:
+        print(False);
+        return 2;
+     ;
 
-print(global_variable());
-print(x, d);
 
-print(1,2,3);
+
+print(fn());

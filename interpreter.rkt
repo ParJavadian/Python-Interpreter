@@ -35,7 +35,9 @@
                 (break-signal)))
                 (continue-signal () (continue-signal))
             )
+;            (begin (display "here! ") (display return-val) return-val))
             return-val)
+
         ))
     )
 )
@@ -161,16 +163,19 @@
     (let  ([func (value-of func-name scope-index)])
         (cases proc func
             (new-proc (params statements parent-scope)
-                (let ([new-scope (add-scope (child-scope parent-scope))])
+                (begin
+                (let ([new-scope (add-scope (child-scope parent-scope))]
+                      )
                         (begin
                             (if (and (thunkk? in-params) (thunkk? params))
-                                (extend-scope-with-params (value-of-thunkk params) (value-of-thunkk in-params) new-scope scope-index)
+                                (begin  (extend-scope-with-params (list-to-defaults(defaults-to-list (value-of-thunkk params)))
+                                                                  (list-to-params(params-to-list (value-of-thunkk in-params))) new-scope scope-index))
                                 (if (thunkk? in-params)
-                                    (extend-scope-with-params params (value-of-thunkk in-params) new-scope scope-index)
+                                    (begin  (extend-scope-with-params (list-to-defaults(defaults-to-list params)) (list-to-params(params-to-list (value-of-thunkk in-params))) new-scope scope-index))
                                     (if (thunkk? params)
-                                        (extend-scope-with-params (value-of-thunkk params) in-params new-scope scope-index)
-                                        (extend-scope-with-params params in-params new-scope scope-index))))
-                            (interpret-program-block statements new-scope))))))
+                                        (begin  (extend-scope-with-params (list-to-defaults(defaults-to-list (value-of-thunkk params))) (list-to-params(params-to-list in-params)) new-scope scope-index))
+                                        (begin  (extend-scope-with-params (list-to-defaults(defaults-to-list params)) (list-to-params(params-to-list in-params)) new-scope scope-index)))))
+                            (interpret-program-block statements new-scope)))))))
 )
 
 (define (value-of exp scope-index)
@@ -233,5 +238,25 @@
         (else none)
     )
 )
+
+(define (defaults-to-list func-params)
+    (cases eval-func-param* func-params
+        (empty-eval-func-param () '())
+        (eval-func-params (eval-param rest-evals) (append (defaults-to-list rest-evals) (list eval-param)))))
+
+(define (list-to-defaults lst)
+    (cond
+        [(null? lst) (empty-eval-func-param)]
+        [else (eval-func-params (car lst) (list-to-defaults (cdr lst)))]))
+
+(define (params-to-list in-params)
+    (cases expression* in-params
+        (empty-expr () '())
+        (expressions (expr rest-exprs) (append (params-to-list rest-exprs) (list expr)))))
+
+(define (list-to-params lst)
+    (cond
+        [(null? lst) (empty-expr)]
+        [else (expressions (car lst) (list-to-params (cdr lst)))]))
 
 (provide (all-defined-out))
