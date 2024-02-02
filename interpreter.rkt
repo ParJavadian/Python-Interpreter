@@ -88,7 +88,7 @@
     (cond
         ((empty? lst) (none))
         (else (begin
-            (extend-scope scope-index i (car lst))
+            (extend-scope scope-index i (car lst) #f)
             (let ([body-val (interpret-program-block body scope-index)])
              (cond
                 ((return-type? body-val)
@@ -139,7 +139,7 @@
                     (cases eval-func-param eval-param
                         (eval_with_default (var val)
                             (begin
-                                (extend-scope scope-index var val)
+                                (extend-scope scope-index var val #t)
                                 (extend-scope-with-params rest-evals in-params scope-index calling-scope-index)
                                 (none)
                             ))))))
@@ -150,7 +150,7 @@
                     (cases eval-func-param eval-param
                         (eval_with_default (var val)
                             (begin
-                                (extend-scope scope-index var (a-thunkk expr scopes scope-index))
+                                (extend-scope scope-index var (a-thunkk expr scopes calling-scope-index) #t)
                                 (extend-scope-with-params rest-evals rest-exprs scope-index calling-scope-index)
                                 (none)
                             ))))))
@@ -181,7 +181,7 @@
                                 0
                                 scope-index)])
 
-                            (extend-scope index var (a-thunkk expr scopes scope-index))
+                            (extend-scope index var (a-thunkk expr scopes scope-index) #f)
                             (none)))
             (global (var) 
                 (begin 
@@ -194,7 +194,7 @@
             (func (name params statements)
                 (begin
                     (extend-scope scope-index name
-                        (new-proc (params-list params scope-index) statements scope-index))
+                        (new-proc (params-list params scope-index) statements scope-index) #f)
                     (none)))
             (print_stmt (expressions) 
                 (let ([vals (expressions->vals expressions scope-index)])
