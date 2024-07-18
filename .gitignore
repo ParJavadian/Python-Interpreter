@@ -1,6 +1,6 @@
 .idea
 passes/compiled/
-compiled/
+compiled/*
 **/compiled/
 *.dep
 *.zo
